@@ -28,9 +28,10 @@ import { useZnsContracts } from 'lib/contracts';
 type NFTViewProps = {
 	domain: string;
 	onEnlist: () => void;
+	onTransfer: () => void;
 };
 
-const NFTView: React.FC<NFTViewProps> = ({ domain, onEnlist }) => {
+const NFTView: React.FC<NFTViewProps> = ({ domain, onEnlist, onTransfer }) => {
 	// TODO: NFT page data shouldn't change before unloading - maybe deep copy the data first
 
 	//- Notes:
@@ -73,7 +74,7 @@ const NFTView: React.FC<NFTViewProps> = ({ domain, onEnlist }) => {
 
 	useEffect(() => {
 		if (!data.isNothing() && data.value.metadata && !data.value.image) {
-			setIsOwnedByYou(data.value.owner.id === account);
+			setIsOwnedByYou(data.value.owner.id.toLowerCase() === account?.toLowerCase());
 
 			// Get metadata
 			fetch(data.value.metadata).then(async (d: Response) => {
@@ -89,6 +90,7 @@ const NFTView: React.FC<NFTViewProps> = ({ domain, onEnlist }) => {
 
 	return (
 		<div className={styles.NFTView}>
+			{/* Image Lightbox */}
 			<Overlay
 				centered
 				img
@@ -160,7 +162,7 @@ const NFTView: React.FC<NFTViewProps> = ({ domain, onEnlist }) => {
 					<div className={styles.Buttons}>
 						<FutureButton
 							glow={isOwnedByYou}
-							onClick={() => {}}
+							onClick={() => isOwnedByYou && onTransfer()}
 							style={{ height: 36, borderRadius: 18 }}
 						>
 							Transfer Ownership
@@ -221,7 +223,6 @@ const NFTView: React.FC<NFTViewProps> = ({ domain, onEnlist }) => {
 					</ArrowLink>
 				</div>
 			</div>
-			<div></div>
 		</div>
 	);
 };

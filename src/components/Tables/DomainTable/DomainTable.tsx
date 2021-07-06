@@ -196,9 +196,9 @@ const DomainTable: React.FC<DomainTableProps> = ({
 						style={{
 							width: 56,
 							height: 56,
-							marginTop: -4,
 							borderRadius: isRootDomain ? '50%' : 'calc(var(--box-radius)/2)',
 							objectFit: 'cover',
+							display: 'block',
 						}}
 						src={row.value}
 					/>
@@ -247,7 +247,7 @@ const DomainTable: React.FC<DomainTableProps> = ({
 							buttonClick(row.value);
 						}}
 					>
-						ENLIST
+						WAITLIST
 					</FutureButton>
 				),
 			},

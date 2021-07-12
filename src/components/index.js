@@ -39,9 +39,11 @@ export { default as TextInput } from './Inputs/TextInput/TextInput';
 
 //- NavBars
 export { default as FilterBar } from './NavBars/FilterBar/FilterBar';
+export { default as TabBar } from './NavBars/TabBar/TabBar';
 export { default as TitleBar } from './NavBars/TitleBar/TitleBar';
 
 //- Tables
+export { default as BidTable } from './Tables/BidTable/BidTable';
 export { default as DomainTable } from './Tables/DomainTable/DomainTable';
 export { default as RequestTable } from './Tables/RequestTable/RequestTable';
 
@@ -64,6 +66,7 @@ export { default as SideBar } from './SideBar/SideBar';
 export { default as ToggleSection } from './ToggleSection/ToggleSection.js';
 export { default as Tooltip } from './Tooltip/Tooltip';
 export { default as ZNALink } from './ZNALink/ZNALink';
+export { default as Confirmation } from './Confirmation/Confirmation';
 
 //- Progress Indicators
 export { default as StepBar } from './ProgressIndicators/StepBar/StepBar';

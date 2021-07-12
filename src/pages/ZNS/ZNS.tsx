@@ -53,7 +53,7 @@ import {
 	MintPreview,
 } from 'components';
 
-import { MintNewNFT, NFTView, Enlist } from 'containers';
+import { MintNewNFT, NFTView, MakeABid } from 'containers';
 
 type ZNSProps = {
 	domain: string;
@@ -134,6 +134,7 @@ const ZNS: React.FC<ZNSProps> = ({ domain, version }) => {
 	const [isMintOverlayOpen, setIsMintOverlayOpen] = useState(false);
 	const [isProfileOverlayOpen, setIsProfileOverlayOpen] = useState(false);
 	const [isSearchActive, setIsSearchActive] = useState(false);
+	const [isBidOverlayOpen, setIsBidOverlayOpen] = useState(false);
 
 	//- MVP Version
 	// TODO: Move the MVP version handler out to a hook
@@ -169,13 +170,11 @@ const ZNS: React.FC<ZNSProps> = ({ domain, version }) => {
 		history.goForward();
 	};
 
-	//- Enlist Overlay
-	// TODO: Really need to make overlays more reusable - this isn't an ideal way to handle overlays with data
-	const enlistCurrentDomain = async () => {
+	const openBidOverlay = () => {
 		if (data.isNothing()) return;
-		enlist(data.value);
-		// console.log(data.value);
+		setIsBidOverlayOpen(true);
 	};
+	const closeBidOverlay = () => setIsBidOverlayOpen(false);
 
 	/////////////
 	// Effects //
@@ -240,13 +239,20 @@ const ZNS: React.FC<ZNSProps> = ({ domain, version }) => {
 		<>
 			{/* Overlays */}
 			<NotificationDrawer />
-			{isSearchActive && (
-				<Overlay open onClose={() => {}}>
-					<></>
+			{data.isJust() && (
+				<Overlay onClose={closeBidOverlay} centered open={isBidOverlayOpen}>
+					<MakeABid domain={data.value} onBid={closeBidOverlay} />
 				</Overlay>
 			)}
+			<Overlay style={{ zIndex: 0 }} open={isSearchActive} onClose={() => {}}>
+				<></>
+			</Overlay>
 			{isWalletOverlayOpen && (
-				<Overlay centered open onClose={() => setIsWalletOverlayOpen(false)}>
+				<Overlay
+					centered
+					open={isWalletOverlayOpen}
+					onClose={() => setIsWalletOverlayOpen(false)}
+				>
 					<ConnectToWallet onConnect={() => setIsWalletOverlayOpen(false)} />
 				</Overlay>
 			)}
@@ -268,11 +274,6 @@ const ZNS: React.FC<ZNSProps> = ({ domain, version }) => {
 					onClose={() => setIsProfileOverlayOpen(false)}
 				>
 					<Profile yours id={account ? account : ''} />
-				</Overlay>
-			)}
-			{enlisting !== undefined && (
-				<Overlay centered open onClose={clear}>
-					<Enlist onSubmit={() => {}} />
 				</Overlay>
 			)}
 
@@ -447,7 +448,7 @@ const ZNS: React.FC<ZNSProps> = ({ domain, version }) => {
 									ownerId={!data.isNothing() ? data.value.owner.id : ''}
 									isLoading={isLoading}
 									mvpVersion={mvpVersion}
-									onButtonClick={enlistCurrentDomain}
+									onButtonClick={openBidOverlay}
 									onImageClick={() => setIsNftView(true)}
 								>
 									{mvpVersion === 3 && (
@@ -515,7 +516,7 @@ const ZNS: React.FC<ZNSProps> = ({ domain, version }) => {
 					<Spring from={{ opacity: 0 }} to={{ opacity: 1 }}>
 						{(styles) => (
 							<animated.div style={styles}>
-								<NFTView domain={domain} onEnlist={enlistCurrentDomain} />
+								<NFTView domain={domain} />
 							</animated.div>
 						)}
 					</Spring>
